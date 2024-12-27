@@ -1,0 +1,154 @@
+{% extends 'jira_integration/base.html' %}
+
+{% block title %}Search Issues{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    {% if messages %}
+    <div class="messages mb-4">
+        {% for message in messages %}
+        <div class="alert alert-{% if message.tags %}{{ message.tags }}{% else %}info{% endif %} alert-dismissible fade show">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if issue %}
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h2 class="mb-0">{{ issue.key }}</h2>
+            <span class="badge bg-{{ issue.fields.status.statusCategory.colorName }}">
+                {{ issue.fields.status.name }}
+            
+        </div>
+        <div class="card-body">
+            <!-- Issue Summary -->
+            <h3 class="card-title">{{ issue.fields.summary }}</h3>
+
+            <!-- Two Column Layout -->
+            <div class="row mt-4">
+                <!-- Left Column - Description -->
+                <div class="col-md-8">
+                    <div class="description-section">
+                        <h4>Description</h4>
+                        <div class="description-content">
+                            {% if issue.fields.description %}
+                                {{ issue.fields.description|linebreaks }}
+                            {% else %}
+                                <p class="text-muted">No description provided</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column - Details -->
+                <div class="col-md-4">
+                    <div class="issue-details p-3 bg-light rounded">
+                        <h4>Details</h4>
+                        <table class="table table-sm">
+                            <tbody>
+                                <tr>
+                                    <th>Type:</th>
+                                    <td>{{ issue.fields.issuetype.name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Priority:</th>
+                                    <td>{{ issue.fields.priority.name|default:"None" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Assignee:</th>
+                                    <td>{{ issue.fields.assignee.displayName|default:"Unassigned" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Reporter:</th>
+                                    <td>{{ issue.fields.reporter.displayName|default:"Unknown" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Created:</th>
+                                    <td>{{ issue.fields.created|date:"Y-m-d H:i" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Updated:</th>
+                                    <td>{{ issue.fields.updated|date:"Y-m-d H:i" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Project:</th>
+                                    <td>{{ issue.fields.project.name }} ({{ issue.fields.project.key }})</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Attachments Section -->
+                    <div class="attachments-section mt-4">
+                        <h4>Attachments</h4>
+                        {% if issue.fields.attachment %}
+                            <ul class="list-group">
+                            {% for attachment in issue.fields.attachment %}
+                                <li class="list-group-item">
+                                    <i class="fas fa-paperclip"></i>
+                                    {{ attachment.filename }}
+                                    <small class="text-muted d-block">
+                                        Size: {{ attachment.size|filesizeformat }}
+                                    </small>
+                                </li>
+                            {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p class="text-muted">No attachments</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="d-flex justify-content-between">
+                <a href="{% url 'search_issues_form' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Search
+                </a>
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="window.location.reload()">
+                        <i class="fas fa-sync"></i> Refresh
+                    </button>
+                    <a href="{{ issue.permalink }}" target="_blank" class="btn btn-info">
+                        <i class="fas fa-external-link-alt"></i> Open in JIRA
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-warning">
+        <h4 class="alert-heading">Issue Not Found</h4>
+        <p>The requested issue could not be found or there was an error retrieving it.</p>
+        <hr>
+        <p class="mb-0">
+            <a href="{% url 'search_issues_form' %}" class="alert-link">Return to search</a>
+        </p>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    .description-content {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+    
+    .issue-details {
+        border: 1px solid #dee2e6;
+    }
+    
+    .issue-details table th {
+        width: 100px;
+    }
+    
+    .attachments-section {
+        border: 1px solid #dee2e6;
+        border-radius: 0.25rem;
+        padding: 1rem;
+    }
+</style>
+{% endblock %}

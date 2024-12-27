@@ -1,0 +1,244 @@
+{% extends 'jira_integration/base.html' %}
+
+{% block title %}View Issue{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    {% if messages %}
+    <div class="messages mb-4">
+        {% for message in messages %}
+        <div class="alert alert-danger alert-dismissible fade show">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if issue %}
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h2 class="mb-0">{{ issue.key }} - {{ issue.fields.summary }}</h2>
+            <span class="badge bg-{{ issue.fields.status.statusCategory.colorName }}">
+                {{ issue.fields.status.name }}
+            
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <!-- Issue Details -->
+                <div class="col-md-4">
+                    <div class="issue-details p-3 bg-light rounded">
+                        <h4>Details</h4>
+                        <table class="table table-sm">
+                            <tbody>
+                                <tr>
+                                    <th>Type:</th>
+                                    <td>{{ issue.fields.issuetype.name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Priority:</th>
+                                    <td>{{ issue.fields.priority.name|default:"None" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Assignee:</th>
+                                    <td>{{ issue.fields.assignee.displayName|default:"Unassigned" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Reporter:</th>
+                                    <td>{{ issue.fields.reporter.displayName|default:"Unknown" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Created:</th>
+                                    <td>{{ issue.fields.created|date:"Y-m-d H:i" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Updated:</th>
+                                    <td>{{ issue.fields.updated|date:"Y-m-d H:i" }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Attachments and Verification -->
+                <div class="col-md-8">
+                    <!-- Original Attachments Section -->
+                    <div class="attachments-section mb-4">
+                        <h4>Attachments</h4>
+                        {% if issue.fields.attachment %}
+                            <ul class="list-group">
+                            {% for attachment in issue.fields.attachment %}
+                                <li class="list-group-item">
+                                    <i class="fas fa-paperclip"></i>
+                                    {{ attachment.filename }}
+                                    <small class="text-muted d-block">
+                                        Size: {{ attachment.size|filesizeformat }}
+                                        | Type: {{ attachment.mimeType }}
+                                    </small>
+                                </li>
+                            {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p class="text-muted">No attachments</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Attachment Verification Results -->
+                    {% if attachment_data %}
+                    <div class="verification-section">
+                        <h4>Verification Results</h4>
+                        <div class="list-group">
+                        {% for attachment in attachment_data %}
+                            <div class="list-group-item">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h5 class="mb-1">
+                                            <i class="fas fa-file-excel"></i>
+                                            {{ attachment.filename }}
+                                        </h5>
+                                        <small class="text-muted">
+                                            Size: {{ attachment.size|filesizeformat }}
+                                            | Type: {{ attachment.mime_type }}
+                                        </small>
+                                    </div>
+                                    {% if attachment.verification_status %}
+                                        <span class="badge bg-{{ attachment.verification_status.status|yesno:'success,danger,warning' }}">
+                                            {{ attachment.verification_status.status|title }}
+                                        
+                                    {% endif %}
+                                </div>
+
+                                {% if attachment.verification_status %}
+                                    <div class="verification-details mt-3">
+                                        {% if attachment.verification_status.message %}
+                                            <div class="alert alert-danger mb-2">
+                                                {{ attachment.verification_status.message }}
+                                            </div>
+                                        {% endif %}
+                                        
+                                        {% if attachment.verification_status.checks %}
+                                            {% for check in attachment.verification_status.checks %}
+                                                <div class="check-result mb-2">
+                                                    <strong>{{ check.check_type|title }}:</strong>
+                                                    <span class="badge bg-{{ check.result|yesno:'success,danger,warning' }}">
+                                                        {{ check.result|title }}
+                                                    
+                                                    
+                                                    {% if check.details %}
+                                                        <div class="details-box mt-2">
+                                                            {% for key, value in check.details.items %}
+                                                                <div class="detail-item"><strong>{{ key|title }}:</strong> {{ value }}</div>
+                                                            {% endfor %}
+                                                        </div>
+                                                    {% endif %}
+                                                    
+                                                    {% if check.error %}
+                                                        <div class="alert alert-danger mt-2 mb-0 py-2">
+                                                            <small>{{ check.error }}</small>
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-danger">
+        <h4 class="alert-heading">Error</h4>
+        <p>Unable to retrieve issue information. This could be due to:</p>
+        <ul>
+            <li>Issue does not exist</li>
+            <li>Connection to JIRA failed</li>
+            <li>You don't have permission to view this issue</li>
+        </ul>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    .issue-details {
+        border: 1px solid #dee2e6;
+    }
+    
+    .issue-details table th {
+        width: 100px;
+    }
+    
+    .attachments-section,
+    .verification-section {
+        border: 1px solid #dee2e6;
+        border-radius: 0.25rem;
+        padding: 1rem;
+    }
+
+    .verification-details {
+        font-size: 0.9em;
+        padding: 10px;
+        background-color: #f8f9fa;
+        border-radius: 4px;
+        margin: 10px 0;
+    }
+    
+    .details-box {
+        padding: 8px;
+        background-color: #fff;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        color: #333;
+        margin-top: 8px;
+        width: 100%;
+        box-sizing: border-box;
+        overflow-x: auto; /* Add horizontal scroll if content is too wide */
+        max-width: 100%; /* Ensure it doesn't exceed parent width */
+    }
+
+    .detail-item {
+        margin: 4px 0;
+        color: #333;
+        word-wrap: break-word; /* Break long words */
+        overflow-wrap: break-word;
+        white-space: pre-wrap; /* Preserve whitespace and wrapping */
+        font-size: 0.9em; /* Slightly smaller font size */
+    }
+
+    .detail-item strong {
+        color: #495057;
+        margin-right: 5px;
+        white-space: nowrap; /* Keep labels on one line */
+    }
+
+    .check-result {
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        background-color: #fff;
+        width: 100%;
+        box-sizing: border-box;
+        overflow: hidden; /* Contain floating children */
+    }
+    
+    /* Ensure proper spacing between check results */
+    .check-result:last-child {
+        margin-bottom: 0;
+    }
+
+    .alert {
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .badge {
+        font-size: 0.9em;
+        padding: 0.5em 0.7em;
+    }
+</style>
+{% endblock %}

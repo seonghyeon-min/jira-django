@@ -1,0 +1,35 @@
+{% extends 'jira_integration/base.html' %}
+
+{% block title %}Create Issue{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <h2>Create JIRA Issue</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="project_key">Project Key:</label>
+                <input type="text" class="form-control" id="project_key" name="project_key" required>
+            </div>
+            <div class="form-group">
+                <label for="issue_type">Issue Type:</label>
+                <select class="form-control" id="issue_type" name="issue_type">
+                    <option value="Task">Task</option>
+                    <option value="Bug">Bug</option>
+                    <option value="Story">Story</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="summary">Summary:</label>
+                <input type="text" class="form-control" id="summary" name="summary" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Description:</label>
+                <textarea class="form-control" id="description" name="description" rows="5" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Create Issue</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
