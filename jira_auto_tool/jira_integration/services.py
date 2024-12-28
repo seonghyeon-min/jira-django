@@ -125,16 +125,28 @@ class JiraService:
     
     async def verify_data_with_api(self, data, platform, npv) :
         eula_verificaiton_by_country = {} # {"KR" : True or False}
-        apiService = eulaApiService()
+        eulaControllerService = EulaControllerService()
+        countryControllerService = CountryControllerService()
         ## how to get country...?  ? ?
         
         eula_data = data
         for eula in eula_data :
-            country = eula['data']['Country']['value']
-
+            cntryLst = eula['data']['Country']['value'].splitlines()
             
-        apiData = await apiService.getEulaByCountryAndPlatform(platform, 'KR', npv) # forwarded country instead of 'KR'
-        print(apiData)
+            # 2024-12-28
+            termsLst = eula['data']['Country']['terms_lst']
+            cleaned_cntry_list = countryControllerService.get_country(cntryLst) # others 에 대한 Logic 추가하기
+
+            for cntry in cleaned_cntry_list :
+                country2Code = countryControllerService.country_mapping.get(cntry, 'Unknown') 
+                apiData = await eulaControllerService.getEulaByCountryAndPlatform(platform, country2Code, npv)
+
+                if eulaControllerService.compareDataAndSyncStatus(termsLst, apiData) :
+                    eula_verificaiton_by_country[country2Code] = True
+                else :
+                    eula_verificaiton_by_country[country2Code] = False
+
+                
     
     
     def _check_excel_structure(self, content) :
@@ -280,7 +292,7 @@ class ExcelManipulateService :
                 )
                 
                 for c_row in range(c_range.min_row, c_range.max_row + 1) :
-                    if self.get_cell_value(c_row, 8) != "삭제" : 
+                    if self.get_cell_value(c_row, 8) != "삭제" : # allow empty space.
                         entry_data['Country']['terms_lst'][-1][c_value]['tp_code'].append(
                             self.get_cell_value(c_row, 6)
                         )
@@ -301,11 +313,11 @@ class ExcelManipulateService :
         return self.sheet_data
         
 
-class eulaApiService :
+class EulaControllerService :
     def __init__(self) :
         self.baseUrl = "http://10.159.73.19:8888/api/v1/terms/terms_group"
         
-    async def getEulaByCountryAndPlatform(self, platform: str, country:str, npv:str) :
+    async def getEulaByCountryAndPlatform(self, platform: str, country: str, npv: str) :
         async with httpx.AsyncClient() as client :
             try :
                 response = await client.get(
@@ -340,8 +352,16 @@ class eulaApiService :
                         "messages": f"API error: {str(e)}"
                     }
                 }
+            
+    def compareDataAndSyncStatus(self, data, apidata) :
+        sync_tp = {list(d.keys())[0]: d['tp_code'] for d in data}
+
+        
+
+
+
                 
-class CountriesMapping :
+class CountryControllerService :
     def __init__(self) :
         self.country_mapping = {
             # GDPR Countries (18개국)
@@ -390,3 +410,19 @@ class CountriesMapping :
             '한국': 'KR',
             'South Korea': 'KR',
             }
+
+    def get_country(self, countryLst) :
+        countries = countryLst[1:] if len(countryLst) >= 2 else countryLst
+
+        filter_countries = [
+            country.strip() for country in countries if country.strip() and not country.startswith("(") and not country.startswith(")") and not country.startswith("*")
+        ]
+
+        processed_cntry = []
+        for country in filter_countries :
+            for sub_country in country.split(' / ') :
+                processed_cntry.append(sub_country.strip())
+
+        return processed_cntry
+
+        
