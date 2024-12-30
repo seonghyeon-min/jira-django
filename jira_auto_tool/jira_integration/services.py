@@ -103,7 +103,7 @@ class JiraService:
             # xlsx file verify
             excel_check = self._check_excel_structure(content)
             
-            verification_result['checks'].append(excel_check)
+            # verification_result['checks'].append(excel_check)
             
             excelReadService = ExcelManipulateService(content)
             excelReadService.build_basic_data_structure()
@@ -111,9 +111,10 @@ class JiraService:
             eula_structure_data = excelReadService.get_data()
             
             
-            await self.verify_data_with_api(eula_structure_data, platform, npv) 
+            res_verify = await self.verify_data_with_api(eula_structure_data, platform, npv) 
             
-                        
+            verification_result['checks'].append(res_verify)   
+                
             return verification_result
         
         except Exception as e :
@@ -127,27 +128,34 @@ class JiraService:
         eula_verificaiton_by_country = {} # {"KR" : True or False}
         eulaControllerService = EulaControllerService()
         countryControllerService = CountryControllerService()
-        ## how to get country...?  ? ?
         
         eula_data = data
         for eula in eula_data :
             cntryLst = eula['data']['Country']['value'].splitlines()
-            
+            print(cntryLst)
             # 2024-12-28
             termsLst = eula['data']['Country']['terms_lst']
             cleaned_cntry_list = countryControllerService.get_country(cntryLst) # others 에 대한 Logic 추가하기
 
+            print(f"cleand_cntry_list : {cleaned_cntry_list}")
             for cntry in cleaned_cntry_list :
-                country2Code = countryControllerService.country_mapping.get(cntry, 'Unknown') 
+                country2Code = countryControllerService.country_mapping.get(cntry, 'Unknown')
+                
+                if country2Code == 'Unknown' :
+                    eula_verificaiton_by_country[cntry] = False
+                    continue
+                
                 apiData = await eulaControllerService.getEulaByCountryAndPlatform(platform, country2Code, npv)
 
                 if eulaControllerService.compareDataAndSyncStatus(termsLst, apiData) :
-                    eula_verificaiton_by_country[country2Code] = True
+                    eula_verificaiton_by_country[cntry] = True
                 else :
-                    eula_verificaiton_by_country[country2Code] = False
-
-                
-    
+                    eula_verificaiton_by_country[cntry] = False
+                    
+        print()                
+        print(f"eula_verification_by_country : \n{eula_verificaiton_by_country}")
+        
+        return eula_verificaiton_by_country
     
     def _check_excel_structure(self, content) :
         try :
@@ -354,13 +362,48 @@ class EulaControllerService :
                 }
             
     def compareDataAndSyncStatus(self, data, apidata) :
-        sync_tp = {list(d.keys())[0]: d['tp_code'] for d in data}
-
+        responseBody = apidata
+        sync_tp = dict()
+        sync_tp_result = dict()
+        terms_mapping = {
+            "음성약관1": "음성 정보",
+            "음성약관2": "음성 정보2",
+            "LG쇼핑약관": "LG Shopping 약관",
+            "맞춤형광고약관": "맞춤형 광고",
+            "시청정보약관": "시청 정보",
+            "최초동의": "최초 동의",
+            "ACR광고약관": "ACR 광고약관",
+            "기본약관": "기본 약관",
+            "전체동의": "전체 동의"
+        }
         
-
-
-
-                
+        for d in data :
+            terms_name = list(d.keys())[0].strip()
+            terms_code = d[list(d.keys())[0]]['tp_code'] 
+            terms_name = terms_mapping.get(terms_name, terms_name)
+            
+            if terms_code != [] :
+                sync_tp[terms_name] = terms_code
+        
+        if 'error' in responseBody and responseBody['error'] :
+            pass
+        
+        try :
+            if responseBody['statusCode'] == 200 :
+                for tn, tc in sync_tp.items() :
+                    if tn in responseBody['response']['terms_lst'].keys() :
+                        tpLst = [d['terms_mgt_tp_code'] for d in responseBody['response']['terms_lst'][tn]]
+                        sync_tp_result[tn] = set(tpLst) == set(tc)
+                            
+        except KeyError as e:
+            pass
+        
+        if all(sync_tp_result.values()) :
+            return True
+        
+        else :
+            return False
+        
 class CountryControllerService :
     def __init__(self) :
         self.country_mapping = {
@@ -396,6 +439,7 @@ class CountryControllerService :
             'New Zealand': 'NZ',
             'Thailand': 'TH',
             'Brazil': 'BR',
+            '브라질' : 'BR',
             'Canada': 'CA',
             'Mexico': 'MX',
             'Australia': 'AU',
@@ -409,6 +453,11 @@ class CountryControllerService :
             'Korea': 'KR',
             '한국': 'KR',
             'South Korea': 'KR',
+            
+            '태국' : 'TH',
+            'Thailand' : 'TH',
+            'Kosovo' : 'XK',
+            
             }
 
     def get_country(self, countryLst) :
@@ -419,6 +468,8 @@ class CountryControllerService :
         ]
 
         processed_cntry = []
+        
+        print(filter_countries)
         for country in filter_countries :
             for sub_country in country.split(' / ') :
                 processed_cntry.append(sub_country.strip())

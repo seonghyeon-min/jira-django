@@ -110,33 +110,17 @@
 
                                 {% if attachment.verification_status %}
                                     <div class="verification-details mt-3">
-                                        {% if attachment.verification_status.message %}
-                                            <div class="alert alert-danger mb-2">
-                                                {{ attachment.verification_status.message }}
-                                            </div>
-                                        {% endif %}
-                                        
                                         {% if attachment.verification_status.checks %}
                                             {% for check in attachment.verification_status.checks %}
                                                 <div class="check-result mb-2">
-                                                    <strong>{{ check.check_type|title }}:</strong>
-                                                    <span class="badge bg-{{ check.result|yesno:'success,danger,warning' }}">
-                                                        {{ check.result|title }}
-                                                    
-                                                    
-                                                    {% if check.details %}
-                                                        <div class="details-box mt-2">
-                                                            {% for key, value in check.details.items %}
-                                                                <div class="detail-item"><strong>{{ key|title }}:</strong> {{ value }}</div>
-                                                            {% endfor %}
+                                                    {% for country, status in check.items %}
+                                                        <div class="detail-item">
+                                                            <strong>{{ country }}:</strong>
+                                                            <span class="badge bg-{{ status|yesno:'success,danger,warning' }}">
+                                                                {{ status|yesno:'Verified,Not Verified,Pending' }}
+                                                            
                                                         </div>
-                                                    {% endif %}
-                                                    
-                                                    {% if check.error %}
-                                                        <div class="alert alert-danger mt-2 mb-0 py-2">
-                                                            <small>{{ check.error }}</small>
-                                                        </div>
-                                                    {% endif %}
+                                                    {% endfor %}
                                                 </div>
                                             {% endfor %}
                                         {% endif %}
@@ -166,79 +150,158 @@
 
 <style>
     .issue-details {
-        border: 1px solid #dee2e6;
+        border: none;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        background: #ffffff;
+        border-radius: 12px;
     }
     
     .issue-details table th {
-        width: 100px;
+        width: 120px;
+        color: #374151;
+        font-weight: 600;
+        font-size: 0.95rem;
     }
     
     .attachments-section,
     .verification-section {
-        border: 1px solid #dee2e6;
-        border-radius: 0.25rem;
-        padding: 1rem;
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
     }
-
+    
     .verification-details {
-        font-size: 0.9em;
-        padding: 10px;
-        background-color: #f8f9fa;
-        border-radius: 4px;
-        margin: 10px 0;
+        background: #ffffff;
+        border-radius: 8px;
+        padding: 1rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     }
     
-    .details-box {
-        padding: 8px;
-        background-color: #fff;
-        border: 1px solid #dee2e6;
-        border-radius: 4px;
-        color: #333;
-        margin-top: 8px;
-        width: 100%;
-        box-sizing: border-box;
-        overflow-x: auto; /* Add horizontal scroll if content is too wide */
-        max-width: 100%; /* Ensure it doesn't exceed parent width */
-    }
-
     .detail-item {
-        margin: 4px 0;
-        color: #333;
-        word-wrap: break-word; /* Break long words */
-        overflow-wrap: break-word;
-        white-space: pre-wrap; /* Preserve whitespace and wrapping */
-        font-size: 0.9em; /* Slightly smaller font size */
-    }
-
-    .detail-item strong {
-        color: #495057;
-        margin-right: 5px;
-        white-space: nowrap; /* Keep labels on one line */
-    }
-
-    .check-result {
-        padding: 10px;
-        margin-bottom: 10px;
-        border: 1px solid #dee2e6;
-        border-radius: 4px;
-        background-color: #fff;
-        width: 100%;
-        box-sizing: border-box;
-        overflow: hidden; /* Contain floating children */
+        background: #f3f4f6;
+        border-radius: 6px;
+        padding: 0.5rem 0.75rem;
+        margin: 0.25rem;
+        display: inline-flex;
+        align-items: center;
+        font-size: 0.875rem;
+        color: #4b5563;
+        border: 1px solid #e5e7eb;
     }
     
-    /* Ensure proper spacing between check results */
-    .check-result:last-child {
-        margin-bottom: 0;
+    .detail-item strong {
+        color: #111827;
+        font-weight: 600;
+        margin-right: 0.5rem;
     }
-
-    .alert {
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    
+    .check-result {
+        background: #ffffff;
+        border-radius: 10px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        border: 1px solid #e5e7eb;
     }
-
+    
+    .verification-section .list-group-item {
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        margin-bottom: 0.75rem;
+        background: #ffffff;
+        transition: all 0.2s ease;
+    }
+    
+    .verification-section .list-group-item:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    
     .badge {
-        font-size: 0.9em;
-        padding: 0.5em 0.7em;
+        padding: 0.5em 1em;
+        font-weight: 500;
+        border-radius: 6px;
+        font-size: 0.875rem;
+        text-transform: capitalize;
+        letter-spacing: 0.025em;
     }
+    
+    /* Modern badge colors */
+    .badge.bg-success {
+        background-color: #059669 !important;
+        color: #ecfdf5;
+    }
+    
+    .badge.bg-danger {
+        background-color: #dc2626 !important;
+        color: #fef2f2;
+    }
+    
+    .badge.bg-warning {
+        background-color: #d97706 !important;
+        color: #fffbeb;
+    }
+    
+    /* Details box with new theme */
+    .details-box {
+        background: #ffffff;
+        border-radius: 10px;
+        padding: 1.25rem;
+        border: 1px solid #e5e7eb;
+        color: #374151;
+        margin: 1rem 0;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+    
+    .details-box pre {
+        background: #f9fafb;
+        border-radius: 8px;
+        padding: 1rem;
+        font-family: ui-monospace, monospace;
+        font-size: 0.875rem;
+        line-height: 1.6;
+    }
+    
+    /* Scrollbar styling */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        background: #d1d5db;
+        border-radius: 4px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+        background: #9ca3af;
+    }
+    
+    /* Alert styling */
+    .alert {
+        border-radius: 10px;
+        border: none;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+    
+    .alert-danger {
+        background-color: #fef2f2;
+        color: #991b1b;
+        border-left: 4px solid #dc2626;
+    }
+    
+    .alert-heading {
+        color: #7f1d1d;
+        font-weight: 600;
+    }    
 </style>
 {% endblock %}
