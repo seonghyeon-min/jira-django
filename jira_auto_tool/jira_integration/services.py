@@ -131,10 +131,10 @@ class JiraService:
 
         eula_data = data
         for eula in eula_data :
-            cntryLst = countryControllerService.process_country_list(eula['data']['Country']['value'])
+            # cntryLst = countryControllerService.process_country_list(eula['data']['Country']['value'])
             termsLst = eula['data']['Country']['terms_lst']
 
-            cleaned_cntry_list = countryControllerService.get_country(cntryLst) 
+            cleaned_cntry_list = countryControllerService.get_country(eula['data']['Country']['value']) 
             for cntry in cleaned_cntry_list :
                 country2Code = countryControllerService.country_mapping.get(cntry, 'Unknown')
                 
@@ -314,7 +314,6 @@ class ExcelManipulateService :
             
         return self.sheet_data
         
-
 class EulaControllerService :
     def __init__(self) :
         self.baseUrl = "http://10.159.73.19:8888/api/v1/terms/terms_group"
@@ -483,7 +482,8 @@ class CountryControllerService :
             'Japan' : 'JP'
             }
 
-    def get_country(self, countryLst) :
+    def get_country(self, country_value) :
+        countryLst = self.process_country_list(country_value)
         countries = countryLst[1:] if len(countryLst) >= 2 else countryLst
 
         filter_countries = [
