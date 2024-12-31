@@ -1,16 +1,17 @@
 from http import HTTPStatus
 from http.client import HTTPException
+from base64 import b64encode
+from django.conf import settings
+from jira import JIRA, JIRAError
+from openpyxl import load_workbook
+
 import io
 import json
 import os
 import httpx
-from jira import JIRA, JIRAError
-from openpyxl import load_workbook
 import openpyxl
 import pandas as pd
 import requests
-from base64 import b64encode
-from django.conf import settings
 
 from dotenv import load_dotenv
 
@@ -110,11 +111,10 @@ class JiraService:
             
             eula_structure_data = excelReadService.get_data()
             
-            
             res_verify = await self.verify_data_with_api(eula_structure_data, platform, npv) 
             
             verification_result['checks'].append(res_verify)   
-                
+                        
             return verification_result
         
         except Exception as e :
@@ -125,19 +125,16 @@ class JiraService:
             }
     
     async def verify_data_with_api(self, data, platform, npv) :
-        eula_verificaiton_by_country = {} # {"KR" : True or False}
+        eula_verificaiton_by_country = {}
         eulaControllerService = EulaControllerService()
         countryControllerService = CountryControllerService()
-        
+
         eula_data = data
         for eula in eula_data :
-            cntryLst = eula['data']['Country']['value'].splitlines()
-            print(cntryLst)
-            # 2024-12-28
+            cntryLst = countryControllerService.process_country_list(eula['data']['Country']['value'])
             termsLst = eula['data']['Country']['terms_lst']
-            cleaned_cntry_list = countryControllerService.get_country(cntryLst) # others 에 대한 Logic 추가하기
 
-            print(f"cleand_cntry_list : {cleaned_cntry_list}")
+            cleaned_cntry_list = countryControllerService.get_country(cntryLst) 
             for cntry in cleaned_cntry_list :
                 country2Code = countryControllerService.country_mapping.get(cntry, 'Unknown')
                 
@@ -147,14 +144,11 @@ class JiraService:
                 
                 apiData = await eulaControllerService.getEulaByCountryAndPlatform(platform, country2Code, npv)
 
-                if eulaControllerService.compareDataAndSyncStatus(termsLst, apiData) :
-                    eula_verificaiton_by_country[cntry] = True
-                else :
-                    eula_verificaiton_by_country[cntry] = False
-                    
-        print()                
-        print(f"eula_verification_by_country : \n{eula_verificaiton_by_country}")
-        
+
+                is_verified = eulaControllerService.compareDataAndSyncStatus(termsLst, apiData)
+                country_key = 'global_others' if country2Code == 'JP' else country2Code
+                eula_verificaiton_by_country[country_key] = is_verified
+
         return eula_verificaiton_by_country
     
     def _check_excel_structure(self, content) :
@@ -360,7 +354,7 @@ class EulaControllerService :
                         "messages": f"API error: {str(e)}"
                     }
                 }
-            
+   
     def compareDataAndSyncStatus(self, data, apidata) :
         responseBody = apidata
         sync_tp = dict()
@@ -397,13 +391,13 @@ class EulaControllerService :
                             
         except KeyError as e:
             pass
-        
+            
         if all(sync_tp_result.values()) :
             return True
-        
+
         else :
             return False
-        
+                
 class CountryControllerService :
     def __init__(self) :
         self.country_mapping = {
@@ -427,26 +421,53 @@ class CountryControllerService :
             'Poland': 'PL',
             'Belgium': 'BE',
 
+            "Switzerland": "CH",
+            "Austria": "AT",
+            "Finland": "FI",
+            "Ireland": "IE",
+            "Portugal": "PT",
+            "Netherlands": "NL",
+            "Sweden": "SE",
+            "Denmark": "DK",
+            "Norway": "NO",
+            
             # GDPR 1개국 (UK)
             'United Kingdom': 'GB',
             'UK': 'GB',
             '영국': 'GB',
 
+            "France": "FR",
+            "Spain": "ES",
+            "Italy": "IT",
+            "Germany": "DE",
+            
+            "중국" : "CN", # wasu? 
+
             # Global 12개국
             'United States': 'US',
             'USA': 'US',
             'China': 'CN',
+
+            '뉴질랜드' : 'NZ',
             'New Zealand': 'NZ',
             'Thailand': 'TH',
             'Brazil': 'BR',
             '브라질' : 'BR',
             'Canada': 'CA',
+            '캐나다' : 'CA',
+            '멕시코' : 'MX',
             'Mexico': 'MX',
+            '호주' : 'AU',
             'Australia': 'AU',
+            '칠레' : 'CL',
             'Chile': 'CL',
+            '아르헨티나' : 'AR',
             'Argentina': 'AR',
+            '콜롬비아': 'CO',
             'Colombia': 'CO',
+            '페루' : 'PE',
             'Peru': 'PE',
+            '인도' : 'IN',
             'India': 'IN',
 
             # Korea
@@ -458,6 +479,8 @@ class CountryControllerService :
             'Thailand' : 'TH',
             'Kosovo' : 'XK',
             
+            # representive Others global
+            'Japan' : 'JP'
             }
 
     def get_country(self, countryLst) :
@@ -467,13 +490,20 @@ class CountryControllerService :
             country.strip() for country in countries if country.strip() and not country.startswith("(") and not country.startswith(")") and not country.startswith("*")
         ]
 
+        filter_countries = filter_countries[0].split(', ') if ', ' in filter_countries[0] else filter_countries
+
         processed_cntry = []
-        
-        print(filter_countries)
         for country in filter_countries :
             for sub_country in country.split(' / ') :
                 processed_cntry.append(sub_country.strip())
 
         return processed_cntry
+    
+    def process_country_list(self, country_value) :
+        cntryLst = country_value.splitlines()
+
+        if 'Others국가' in cntryLst[0] :
+            return ['Japan']
+        return cntryLst
 
         
