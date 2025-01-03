@@ -70,6 +70,57 @@ class JiraService:
             print(f"Error getting issue: {str(e)}")
             raise
         
+    def leave_comment_result(self, verify_data, issue_key) :
+        if not self.jira_client :
+            self.connect()
+        
+        try :
+            comment = "Verification Results:\n"
+            comment += f"Status: {verify_data['status']}\n\n"
+            
+            if verify_data['checks'][0]['statusCode'] :
+                comment += f"❌ Error Message: {verify_data['checks'][0]['detail']}\n\n"
+            
+            else :
+                country_results = verify_data['checks'][0]
+                
+                passed_countries = []
+                failed_countries = []
+                
+                for country, result in country_results.items() :
+                    if result : 
+                        passed_countries.append(country)
+                    else :
+                        failed_countries.append(country)
+
+                comment += "✅ Passed Countries:\n"
+                if passed_countries :
+                    for country in sorted(passed_countries) :
+                        comment += f"- {country}\n"
+                else :
+                    comment += "None\n"
+                
+                comment += "\n❌ Failed Countries:\n"
+                if failed_countries: 
+                    for country in sorted(failed_countries) :
+                        comment += f"- {country}\n"
+                else :
+                    comment += "None\n"
+                    
+                            # Add summary
+                total_countries = len(country_results)
+                passed_count = len(passed_countries)
+                
+                comment += f"\n<<Summary>>\n"
+                comment += f"Passed: {passed_count}\n"
+                comment += f"Failed: {len(failed_countries)}\n"
+                
+            self.jira_client.add_comment(issue_key, comment)
+        
+        except Exception as e:
+            self.jira_client.add_comment(issue_key, f"Error Leaving comment : {str(e)}")
+            
+        
     def create_issue(self, project_key, summary, description, issue_type="Story") :
         if not self.jira_client :
             self.connect()
@@ -100,12 +151,7 @@ class JiraService:
                 'status' : 'verified',
                 'checks' : []
             }
-            
-            # xlsx file verify
-            excel_check = self._check_excel_structure(content)
-            
-            # verification_result['checks'].append(excel_check)
-            
+                        
             excelReadService = ExcelManipulateService(content)
             excelReadService.build_basic_data_structure()
             
@@ -113,7 +159,9 @@ class JiraService:
             
             res_verify = await self.verify_data_with_api(eula_structure_data, platform, npv) 
             
-            verification_result['checks'].append(res_verify)   
+            verification_result['checks'].append(res_verify)
+            
+            # self.leave_comment_result(verification_result)
                         
             return verification_result
         
@@ -142,37 +190,21 @@ class JiraService:
                     eula_verificaiton_by_country[cntry] = False
                     continue
                 
-                apiData = await eulaControllerService.getEulaByCountryAndPlatform(platform, country2Code, npv)
+                responseData = await eulaControllerService.getEulaByCountryAndPlatform(platform, country2Code, npv)
 
+                if 'error' in responseData and responseData['error'] : 
+                    return {
+                        'statusCode' : responseData['statusCode'],
+                        'detail' : responseData['detail']['messages']
+                    }
+                
 
-                is_verified = eulaControllerService.compareDataAndSyncStatus(termsLst, apiData)
-                country_key = 'global_others' if country2Code == 'JP' else country2Code
+                is_verified = eulaControllerService.compareDataAndSyncStatus(termsLst, responseData)
+                country_key = 'global_others' if country2Code == 'JP' else cntry
                 eula_verificaiton_by_country[country_key] = is_verified
 
         return eula_verificaiton_by_country
-    
-    def _check_excel_structure(self, content) :
-        try :
-            wb = load_workbook(io.BytesIO(content), read_only=True)
-            
-            return {
-                'check_type' : 'excel_structure',
-                'result' : 'pass',
-                'details' : {
-                    'worksheet_count' : len(wb.worksheets),
-                    'worksheet_names' : wb.sheetnames
-                }
-            }            
-        
-        except Exception as e :
-            return {
-                'check_type' : 'excel_structure',
-                'result' : 'fail',
-                'details' : {
-                    'error' : str(e)
-                }
-            }
-            
+                
 class ExcelManipulateService :
     def __init__(self, content, sheet_name ="구조",  start_row = 6) :
         self.content = content
@@ -317,7 +349,7 @@ class ExcelManipulateService :
 class EulaControllerService :
     def __init__(self) :
         self.baseUrl = "http://10.159.73.19:8888/api/v1/terms/terms_group"
-        
+            
     async def getEulaByCountryAndPlatform(self, platform: str, country: str, npv: str) :
         async with httpx.AsyncClient() as client :
             try :
@@ -327,17 +359,16 @@ class EulaControllerService :
                         "platform" : platform,
                         "country" : country,
                         "npv" : npv
-                    }
+                    },
+                    timeout=10.0
                 )
                 response.raise_for_status()
-                
-                data = response.json()
-                return data
+                return response.json()    
             
             except httpx.TimeoutException :
                 return {
                     "error": True,
-                    "status_code": HTTPStatus.GATEWAY_TIMEOUT,
+                    "statusCode": HTTPStatus.GATEWAY_TIMEOUT,
                     "detail": {
                         "statusCode": 504,
                         "messages": "Request timeout"
@@ -347,13 +378,13 @@ class EulaControllerService :
             except httpx.HTTPError as e:
                 return {
                     "error": True,
-                    "status_code": HTTPStatus.BAD_GATEWAY,
+                    "statusCode": HTTPStatus.BAD_GATEWAY,
                     "detail": {
                         "statusCode": 502,
                         "messages": f"API error: {str(e)}"
                     }
                 }
-   
+                
     def compareDataAndSyncStatus(self, data, apidata) :
         responseBody = apidata
         sync_tp = dict()

@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'jira_integration',
 ]
 
@@ -73,8 +74,8 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'jira_auto_tool.wsgi.application'
-
+# WSGI_APPLICATION = 'jira_auto_tool.wsgi.application'
+ASGI_APPLICATION = 'jira_auto_tool.asgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
