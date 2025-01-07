@@ -1,6 +1,7 @@
 from http import HTTPStatus
 from http.client import HTTPException
 from base64 import b64encode
+import time
 from django.conf import settings
 from jira import JIRA, JIRAError
 from openpyxl import load_workbook
@@ -61,8 +62,7 @@ class JiraService:
         
         try :
             issue = self.jira_client.issue(issue_key)
-        
-            
+
             if hasattr(issue, 'raw') and 'fields' in issue.raw:
                 return issue
             
@@ -75,15 +75,14 @@ class JiraService:
             self.connect()
         
         try :
+            country_results = verify_data['checks'][0]
             comment = "Verification Results:\n"
             comment += f"Status: {verify_data['status']}\n\n"
-            
-            if verify_data['checks'][0]['statusCode'] :
+
+            if isinstance(country_results, dict) and 'detail' in country_results:
                 comment += f"❌ Error Message: {verify_data['checks'][0]['detail']}\n\n"
             
             else :
-                country_results = verify_data['checks'][0]
-                
                 passed_countries = []
                 failed_countries = []
                 
@@ -160,8 +159,6 @@ class JiraService:
             res_verify = await self.verify_data_with_api(eula_structure_data, platform, npv) 
             
             verification_result['checks'].append(res_verify)
-            
-            # self.leave_comment_result(verification_result)
                         
             return verification_result
         
@@ -176,7 +173,16 @@ class JiraService:
         eula_verificaiton_by_country = {}
         eulaControllerService = EulaControllerService()
         countryControllerService = CountryControllerService()
-
+        
+        # Server connection Test #
+        server_status = await eulaControllerService.test_eula_server_connection()
+        
+        if not server_status['detail']['server_reachable'] :
+            return {
+                "statusCode" : HTTPStatus.SERVICE_UNAVAILABLE,
+                "detail" : "connection server failed"
+            }
+        
         eula_data = data
         for eula in eula_data :
             # cntryLst = countryControllerService.process_country_list(eula['data']['Country']['value'])
@@ -185,24 +191,21 @@ class JiraService:
             cleaned_cntry_list = countryControllerService.get_country(eula['data']['Country']['value']) 
             for cntry in cleaned_cntry_list :
                 country2Code = countryControllerService.country_mapping.get(cntry, 'Unknown')
+                country_key = 'global' if country2Code == 'JP' else cntry
                 
                 if country2Code == 'Unknown' :
-                    eula_verificaiton_by_country[cntry] = False
+                    eula_verificaiton_by_country[country_key] = False
                     continue
-                
-                responseData = await eulaControllerService.getEulaByCountryAndPlatform(platform, country2Code, npv)
 
-                if 'error' in responseData and responseData['error'] : 
-                    return {
-                        'statusCode' : responseData['statusCode'],
-                        'detail' : responseData['detail']['messages']
-                    }
+                responseData = await eulaControllerService.getEulaByCountryAndPlatform(platform, country2Code, npv)
                 
+                if 'error' in responseData and responseData['error'] :  #404 not found?
+                    eula_verificaiton_by_country[country_key] = False
+                    continue
 
                 is_verified = eulaControllerService.compareDataAndSyncStatus(termsLst, responseData)
-                country_key = 'global_others' if country2Code == 'JP' else cntry
                 eula_verificaiton_by_country[country_key] = is_verified
-
+                
         return eula_verificaiton_by_country
                 
 class ExcelManipulateService :
@@ -349,6 +352,34 @@ class ExcelManipulateService :
 class EulaControllerService :
     def __init__(self) :
         self.baseUrl = "http://10.159.73.19:8888/api/v1/terms/terms_group"
+        
+    async def test_eula_server_connection(self) -> dict :
+        results = {
+            'status' : False,
+            'detail' : {
+                'server_reachable' : False
+            }
+        }
+        try :
+            async with httpx.AsyncClient() as client :
+                try :
+                    response = await client.get(
+                        self.baseUrl,
+                        timeout=10.0
+                    )
+                    
+                    results['detail']['server_reachable'] = True
+                    
+                except httpx.ConnectError as e:
+                    return results
+                
+                except httpx.RequestError as e :
+                    return results
+
+                return results
+                
+        except Exception as e:
+            pass
             
     async def getEulaByCountryAndPlatform(self, platform: str, country: str, npv: str) :
         async with httpx.AsyncClient() as client :
@@ -374,7 +405,27 @@ class EulaControllerService :
                         "messages": "Request timeout"
                     }
                 }
-                
+            
+            except httpx.HTTPStatusError as e :
+                if e.response.status_code == HTTPStatus.NOT_FOUND :
+                    return {
+                        "error" : True,
+                        "statusCode" : HTTPStatus.NOT_FOUND,
+                        "detail" : {
+                            "statusCode" : 404,
+                            "messages" : f"{country} eula data Not Found"
+                        }
+                    }
+                else:
+                    return {
+                        "error": True,
+                        "statusCode": HTTPStatus.BAD_GATEWAY,
+                        "detail": {
+                            "statusCode": 502,
+                            "messages": f"API error: {str(e)}"
+                        }
+                    }
+            
             except httpx.HTTPError as e:
                 return {
                     "error": True,
@@ -537,4 +588,3 @@ class CountryControllerService :
             return ['Japan']
         return cntryLst
 
-        

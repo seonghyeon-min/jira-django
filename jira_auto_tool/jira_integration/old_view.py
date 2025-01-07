@@ -1,12 +1,11 @@
 from typing import List, Dict, Optional, Any
 import re
 from dataclasses import dataclass
-from asgiref.sync import async_to_sync
+from asgiref.sync import async_to_sync, sync_to_async
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .services.jira.jira_controller import JiraController
-from .services.application_manager import ApplicationManager
+from .service import JiraService
 
 @dataclass
 class AttachmentInfo:
@@ -15,7 +14,7 @@ class AttachmentInfo:
     mime_type: str
     verification_status: Optional[Dict[str, Any]] = None
 
-class IssueVerificationTest (APIView) :
+class IssueVerification (APIView) :
     SMARTMEDIA_KEYWORKD = 'smartmediaproduct'
     EXCEL_EXTENSION = '.xlsx'
     PLATFORM_PATTERN = r'<td[^>]*id="tplatform"[^>]*>(.*?)</td>'
@@ -26,7 +25,7 @@ class IssueVerificationTest (APIView) :
     
     async def _get_async(self, request, issue_key) :
         try :
-            jira_service = JiraController()
+            jira_service = JiraService()
             if not jira_service.connect() :
                 return self.create_error_response(
                     'Failed to connect to Jira Service (check your id, pw, api token)',
@@ -58,12 +57,16 @@ class IssueVerificationTest (APIView) :
             
             if self.is_valid_excel_file(attachment_info.filename) :
                 verification_result = await self._verify_attachment(
-                    attachment, issue
+                    attachment, issue, jira_service
                 )
                 
                 attachment_info.verification_status = verification_result
                 
                 self.handle_verification_success(jira_service, verification_result)
+                # if verification_result['checks'][0]['statusCode'] :
+                #     await self.handle_verification_success(
+                #         jira_service, verification_result
+                #     )
                     
             attachment_data.append(attachment_info)
         
@@ -82,10 +85,9 @@ class IssueVerificationTest (APIView) :
             self.SMARTMEDIA_KEYWORKD.lower() in filename.lower()
         )
         
-    async def _verify_attachment(self, attachment, issue) :
+    async def _verify_attachment(self, attachment, issue, jira_service) :
         platform, npv = self.extract_platform_and_npv(issue.fields.description)
-        applicationManager = ApplicationManager(attachment.get())
-        return await applicationManager.verify_eula_attachment(platform, npv)
+        return await jira_service.verify_attachment(attachment, platform, npv)
     
     def extract_platform_and_npv(self, description: str) :
         description = description.replace('&quot;', '"').replace('&#x27;', "'")
@@ -112,13 +114,13 @@ class IssueVerificationTest (APIView) :
     ) : 
         return Response(
             {
-                'statusCode' : verification_result['checks'][0]['statusCode'],
-                'message': verification_result['checks'][0]['detail'],
+                'statusCode' : status.HTTP_200_OK if bool(attachment_data) else status.HTTP_204_NO_CONTENT,
+                'message': 'Verification completed' if bool(attachment_data) else 'No Content',
                 'data' : {
                     'has_attachments' : bool(attachment_data),
                     'verification_status': verification_result,
                 }
-            }, status=verification_result['checks'][0]['statusCode']
+            }, status=status.HTTP_200_OK if bool(attachment_data) else status.HTTP_204_NO_CONTENT
         )
         
     def create_error_response(

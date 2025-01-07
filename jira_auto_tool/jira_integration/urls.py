@@ -1,6 +1,7 @@
 from django.urls import path
-from . import views, api_test_view
-from .views import IssueVerification
+from . import old_view, api_test_view
+from .old_view import IssueVerification
+from .views import IssueVerificationTest
 
 urlpatterns = [
     # form-based
@@ -13,4 +14,5 @@ urlpatterns = [
     
     #Rest-Framework
     path('issue/<str:issue_key>/verify/', IssueVerification.as_view(), name='issue_verification'),
+    path('issue/<str:issue_key>/verify-test/', IssueVerificationTest.as_view(), name='issue_verification_test'),
 ]

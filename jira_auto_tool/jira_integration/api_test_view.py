@@ -5,7 +5,7 @@ from django.views.decorators.http import require_http_methods
 from django.contrib import messages
 
 import json
-from .services import JiraService
+from .service import JiraService
 
 @csrf_exempt
 @require_http_methods(["POST"])
