@@ -143,35 +143,37 @@ class EulaControllerService :
             }
         )
         
-    def compare_term_data_sync_status(self, loaclBody: list, responseBody: dict) -> Dict :
+    def compare_term_data_sync_status(self, localBody: list, responseBody: dict) -> Dict :
         eula_config = EulaConfig()
         terms_mapping = eula_config.get_terms_mapping()
         
         sync_tp = dict()
         sync_tp_result = dict()
-        
-        for data in loaclBody :
-            terms_name = list(data.keys())[0].strip()
-            terms_code = data[list(data.keys())[0]]['tp_code']
-            terms_name = terms_mapping.get(terms_name)
-            
-            if terms_code != [] :
-                sync_tp[terms_name] = terms_code
                 
+        for data in localBody :
+            terms_name = list(data.keys())[0].replace(" ", "")
+            terms_code = data[list(data.keys())[0]]['tp_code']
+            terms_name = terms_mapping.get(terms_name, terms_name)
+            
+            if terms_code :
+                sync_tp[terms_name] = terms_code
+        
+        
         if 'error' in responseBody and responseBody['error'] :
-            pass
+            return False
         
         try :    
-            if responseBody['statusCode'] == 200 :
+            if responseBody['statusCode'] == HTTPStatus.OK :
+                response_terms = responseBody['returnValue']['response']['terms_lst']
+                
                 for tn, tc in sync_tp.items() :
-                    if tn in responseBody['response']['terms_lst'].keys() :
-                        tpLst = [d['terms_mgt_tp_code'] for d in responseBody['response']['terms_lst'][tn]]
+                    if tn in response_terms.keys() :
+                        tpLst = [d['terms_mgt_tp_code'] for d in response_terms[tn]]
                         sync_tp_result[tn] = set(tpLst) == set(tc)
-        
+                    else :
+                        sync_tp_result[tn] = False
+            
         except KeyError as e :
-            pass
+            raise ValueError(str(e))
         
-        if all(sync_tp_result.values()) :
-            return True
-        else :
-            return False
+        return all(sync_tp_result.values())

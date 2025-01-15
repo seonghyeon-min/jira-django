@@ -1,5 +1,6 @@
 import io
 import json
+import math
 import openpyxl
 
 
@@ -21,8 +22,8 @@ class ExcelManipulateService :
         
     def get_all_ranges_by_column(self, column_index, base_range) :
         all_ranges = []
-        
-        merged_ranges = self.get_merged_ranges_by_column(column_index)
+
+        merged_ranges = self.get_merged_ranges_by_column(column_index) 
         merged_ranges.sort(key=lambda x : x.min_row)
         
         current_row = base_range.min_row
@@ -122,14 +123,45 @@ class ExcelManipulateService :
                         }
                     }
                 )
-                
-                for c_row in range(c_range.min_row, c_range.max_row + 1) :
-                    if self.get_cell_value(c_row, 8) != "삭제" : # allow empty space.
-                        entry_data['Country']['terms_lst'][-1][c_value]['tp_code'].append(
-                            self.get_cell_value(c_row, 6)
-                        )
+                if self.is_check_merged(c_range) :
+                    current_row = c_range.min_row
+                    while True :
+                        if self.get_cell_value(current_row, 8) != "삭제" :
+                            order = self.get_cell_value(current_row, 5)
+                            tp_code = self.get_cell_value(current_row, 6)
+                            
+                            entry_data['Country']['terms_lst'][-1][c_value]['tp_code'].append(tp_code)
+                            
+                            next_order = self.get_cell_value(current_row+1, 5)
+                            if next_order == 1 or next_order is None :
+                                break
+                            
+                            current_row += 1
+
+                else :
+                    for c_row in range(c_range.min_row, c_range.max_row + 1) :
+                        if self.get_cell_value(c_row, 8) != "삭제" : # allow empty space.
+                            entry_data['Country']['terms_lst'][-1][c_value]['tp_code'].append(
+                                self.get_cell_value(c_row, 6)
+                            )
         
             self.sheet_data.append({'data': entry_data})
+            print(f"sheet_data : {self.sheet_data}")
+            
+    def get_cell_value_for_single_row(self, range, entry_data, c_value) :
+        start_row = range.min_row
+        nex_cell_value = math.inf
+        while(nex_cell_value != 1) :
+            cur_cell_value = self.get_cell_value(start_row, 5)
+            nex_cell_value = self.get_cell_value(start_row+1, 5)    
+            start_row += 1
+            
+            entry_data['Country']['terms_lst'][-1][c_value]['tp_code'].append(
+                self.get_cell_value(start_row, 6)
+            )
+            
+    def is_check_merged(self, range) :
+        return bool(range.min_row == range.max_row)
 
     def get_data(self) :
         ## export json

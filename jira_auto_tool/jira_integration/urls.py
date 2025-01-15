@@ -15,4 +15,5 @@ urlpatterns = [
     #Rest-Framework
     path('issue/<str:issue_key>/verify/', IssueVerification.as_view(), name='issue_verification'),
     path('issue/<str:issue_key>/verify-test/', IssueVerificationTest.as_view(), name='issue_verification_test'),
+    path('issue/verify/', IssueVerificationTest.as_view(), name="issue_verificaiton_api")
 ]

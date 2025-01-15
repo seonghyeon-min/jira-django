@@ -41,7 +41,7 @@ class CountryConfig :
             "Italy": "IT",
             "Germany": "DE",
             
-            "중국" : "CN", # wasu? 
+            "중국" : "C01", # wasu? 
 
             # Global 12개국
             'United States': 'US',

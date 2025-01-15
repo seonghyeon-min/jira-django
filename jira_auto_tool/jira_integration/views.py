@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import List, Dict, Optional, Any
 import re
 from dataclasses import dataclass
@@ -12,6 +13,7 @@ from .services.application_manager import ApplicationManager
 class AttachmentInfo:
     filename: str
     size: int
+    created: str
     mime_type: str
     verification_status: Optional[Dict[str, Any]] = None
 
@@ -21,10 +23,19 @@ class IssueVerificationTest (APIView) :
     PLATFORM_PATTERN = r'<td[^>]*id="tplatform"[^>]*>(.*?)</td>'
     NPV_PATTERN = r'<td[^>]*id="(?:tpsw|tnpv)"[^>]*>(.*?)</td>'
     
-    def get(self, request, issue_key) :
-        return async_to_sync(self._get_async)(request, issue_key)
+    def get(self, request) :
+        issue_key = request.GET.get('issue_key')
+        comment_key = request.GET.get('comment_key')
+        
+        if not issue_key or not comment_key :
+            return self.create_error_response(
+                'Missing issue_key, comment_key parameter',
+                status.HTTP_400_BAD_REQUEST
+            )
+            
+        return async_to_sync(self._get_async)(request, issue_key, comment_key)
     
-    async def _get_async(self, request, issue_key) :
+    async def _get_async(self, request, issue_key, comment_key) :
         try :
             jira_service = JiraController()
             if not jira_service.connect() :
@@ -34,8 +45,11 @@ class IssueVerificationTest (APIView) :
                 )
             
             issue = jira_service.get_issue(issue_key)
+            
+            self.validate_issue_status(issue, jira_service)
+            
             attachment_data, verification_result = await self.process_attachments(
-                issue, jira_service
+                issue, jira_service, comment_key
             )
             
             return self.create_success_response(attachment_data, verification_result)
@@ -43,37 +57,62 @@ class IssueVerificationTest (APIView) :
         except Exception as e :
             return self.create_error_response(str(e))
     
-    async def process_attachments(self, issue, jira_service) :
+    async def process_attachments(self, issue, jira_service, comment_key) :
         attachment_data = []
         verification_result = None
         
-        if not hasattr(issue.fields, 'attachment') or not issue.fields.attachment :
-            return attachment_data, verification_result
+        self.validate_issue_requirements(issue, jira_service)
         
-        for attachment in issue.fields.attachment :
-            if self.SMARTMEDIA_KEYWORKD not in str(getattr(attachment, 'filename', '')).lower() :
-                continue
-            
-            attachment_info = self.create_attachment_info(attachment)
-            
-            if self.is_valid_excel_file(attachment_info.filename) :
-                verification_result = await self._verify_attachment(
-                    attachment, issue
-                )
-                
-                attachment_info.verification_status = verification_result
-                
-                self.handle_verification_success(jira_service, verification_result)
-                    
-            attachment_data.append(attachment_info)
+        latest_attachment = self.get_latest_attachment_file(issue)
+        latest_attachment_info = self.create_attachment_info(latest_attachment)
+        
+        verification_result = await self._verify_attachment(latest_attachment, issue)
+        latest_attachment_info.verification_status = verification_result
+        
+        self.handle_verification_success(jira_service, verification_result, issue, comment_key)
+        
+        attachment_data.append(latest_attachment_info)
         
         return attachment_data, verification_result
+    
+    def validate_issue_status(self, issue, jira_service) -> None :
+        issue_status = jira_service.get_jira_status(issue)
+        
+        # if issue_status.lower() == 'closed' :
+        #     raise ValueError(f"Issue status is {issue_status}")
+        
+    def validate_issue_requirements(self, issue, jira_service) :
+        EXPECTED_COMPONENT_NAME = '09. 디바이스약관'
+
+        component_name = jira_service.get_component_name(issue)
+        if not component_name or component_name.strip() != EXPECTED_COMPONENT_NAME :
+            raise ValueError(f'Invalid component name: {component_name}')
+        
+        if not hasattr(issue.fields, 'attachment') or not issue.fields.attachment :
+            raise ValueError('No attachment found in the issue')
+        
+    def get_latest_attachment_file(self, issue) :
+        valid_attachemnt = [
+            (attachment, self.parse_creation_time(attachment.created))
+            for attachment in issue.fields.attachment
+            if (self.SMARTMEDIA_KEYWORKD in str(getattr(attachment, 'filename', '')).lower() and
+                self.is_valid_excel_file(attachment.filename))
+        ]
+        
+        if not valid_attachemnt :
+            raise ValueError("No valid attachment found matching criteria") 
+        
+        return max(
+            valid_attachemnt,
+            key=lambda x: x[1] or datetime.min
+        )[0]
             
     def create_attachment_info(self, attachment) -> AttachmentInfo :
         return AttachmentInfo(
             filename = attachment.filename,
             size=attachment.size,
-            mime_type=attachment.mimeType
+            created=attachment.created,
+            mime_type=attachment.mimeType,
         )
     
     def is_valid_excel_file(self, filename: str) :
@@ -102,8 +141,16 @@ class IssueVerificationTest (APIView) :
             npv_match.group(1).strip()
         )
     
-    def handle_verification_success(self, jira_service, verification_result) -> None :
-        jira_service.leave_comment_result(verification_result, 'ITPLAT-1142')
+    def parse_creation_time(self, created_time: str) -> Optional[datetime] :
+        try :
+            return datetime.fromisoformat(created_time.replace('Z', '+00:00'))
+
+        except (ValueError, AttributeError) :
+            return None
+    
+    # comment 남길 issue를 조정 or rendering 할 수 있는 html 생성
+    def handle_verification_success(self, jira_service, verification_result, issue, comment_key) -> None :
+        jira_service.leave_comment_result(verification_result, comment_key, issue)
         
     def create_success_response(
         self, 

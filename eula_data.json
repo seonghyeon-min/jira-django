@@ -1,0 +1,1469 @@
+[
+    {
+        "data": {
+            "Country": {
+                "value": "GDPR 18개국\nBulgaria\nCroatia\nCyprus\nCzech\nEstonia\nGreece\nHungary\nIceland\nLatvia\nLiechtenstein\nLithuania\nLuxemburg\nMalta\nRomania\nSlovakia\nSlovenia\nPoland\nBelgium",
+                "terms_lst": [
+                    {
+                        "최초동의": {
+                            "tp_code": [
+                                "S_DSC"
+                            ]
+                        }
+                    },
+                    {
+                        "기본약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP"
+                            ]
+                        }
+                    },
+                    {
+                        "시청정보 약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_ADG"
+                            ]
+                        }
+                    },
+                    {
+                        "음성약관1": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_VNG"
+                            ]
+                        }
+                    },
+                    {
+                        "음성약관2": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_ADG",
+                                "S_VNG"
+                            ]
+                        }
+                    },
+                    {
+                        "맞춤형광고약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_TAG"
+                            ]
+                        }
+                    },
+                    {
+                        "ACR약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_ADG"
+                            ]
+                        }
+                    },
+                    {
+                        "ACR광고약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_ADG",
+                                "S_TAG"
+                            ]
+                        }
+                    },
+                    {
+                        "LG쇼핑 약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_ADG"
+                            ]
+                        }
+                    },
+                    {
+                        "데이터판매": {
+                            "tp_code": []
+                        }
+                    },
+                    {
+                        "전체동의": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_ADG",
+                                "S_VNG",
+                                "S_TAG"
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "data": {
+            "Country": {
+                "value": "GDPR 9개국\n(LG Channels 있고, DPA 없는 국가)\nSwitzerland\nAustria \nFinland\nIreland\nPortugal\nNetherlands\nSweden\nDenmark\nNorway",
+                "terms_lst": [
+                    {
+                        "최초동의": {
+                            "tp_code": [
+                                "S_DSC"
+                            ]
+                        }
+                    },
+                    {
+                        "기본약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_CHL"
+                            ]
+                        }
+                    },
+                    {
+                        "시청정보 약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_CHL",
+                                "S_ADG"
+                            ]
+                        }
+                    },
+                    {
+                        "음성약관1": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_CHL",
+                                "S_VNG"
+                            ]
+                        }
+                    },
+                    {
+                        "음성약관2": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_CHL",
+                                "S_ADG",
+                                "S_VNG"
+                            ]
+                        }
+                    },
+                    {
+                        "맞춤형광고약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_CHL",
+                                "S_TAG"
+                            ]
+                        }
+                    },
+                    {
+                        "LG Channels 약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_CHL"
+                            ]
+                        }
+                    },
+                    {
+                        "ACR약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_CHL",
+                                "S_ADG"
+                            ]
+                        }
+                    },
+                    {
+                        "ACR광고약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_CHL",
+                                "S_ADG",
+                                "S_TAG"
+                            ]
+                        }
+                    },
+                    {
+                        "LG쇼핑 약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_CHL",
+                                "S_ADG"
+                            ]
+                        }
+                    },
+                    {
+                        "데이터판매": {
+                            "tp_code": []
+                        }
+                    },
+                    {
+                        "전체동의": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_CHL",
+                                "S_ADG",
+                                "S_VNG",
+                                "S_TAG"
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "data": {
+            "Country": {
+                "value": "GDPR 4개국\n(LG Channels / DPA 있는 국가)\nFrance \nSpain\nItaly\nGermany",
+                "terms_lst": [
+                    {
+                        "최초동의": {
+                            "tp_code": [
+                                "S_DSC"
+                            ]
+                        }
+                    },
+                    {
+                        "기본 약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_CHL"
+                            ]
+                        }
+                    },
+                    {
+                        "시청 정보": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_CHL",
+                                "S_ADG"
+                            ]
+                        }
+                    },
+                    {
+                        "음성 정보": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_CHL",
+                                "S_VNG"
+                            ]
+                        }
+                    },
+                    {
+                        "음성 정보2": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_CHL",
+                                "S_ADG",
+                                "S_VNG"
+                            ]
+                        }
+                    },
+                    {
+                        "맞춤형 광고": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_CHL",
+                                "S_TAG"
+                            ]
+                        }
+                    },
+                    {
+                        "채널플러스 약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_CHL"
+                            ]
+                        }
+                    },
+                    {
+                        "ACR약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_CHL",
+                                "S_ADG"
+                            ]
+                        }
+                    },
+                    {
+                        "ACR 광고약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_CHL",
+                                "S_ADG",
+                                "S_TAG"
+                            ]
+                        }
+                    },
+                    {
+                        "LG쇼핑 약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_CHL",
+                                "S_ADG"
+                            ]
+                        }
+                    },
+                    {
+                        "데이터판매": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_CHL",
+                                "S_ADG",
+                                "S_DPA"
+                            ]
+                        }
+                    },
+                    {
+                        "전체 동의": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_CHL",
+                                "S_ADG",
+                                "S_VNG",
+                                "S_TAG",
+                                "S_DPA"
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "data": {
+            "Country": {
+                "value": "GDPR 1개국\n(WWW, LG채널, DPA 있는 국가)\n영국",
+                "terms_lst": [
+                    {
+                        "최초동의": {
+                            "tp_code": [
+                                "S_DSC"
+                            ]
+                        }
+                    },
+                    {
+                        "기본약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_CHL"
+                            ]
+                        }
+                    },
+                    {
+                        "시청정보 약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_CHL",
+                                "S_ADG"
+                            ]
+                        }
+                    },
+                    {
+                        "음성약관1": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_CHL",
+                                "S_VNG"
+                            ]
+                        }
+                    },
+                    {
+                        "음성약관2": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_CHL",
+                                "S_ADG",
+                                "S_VNG"
+                            ]
+                        }
+                    },
+                    {
+                        "맞춤형광고약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_CHL",
+                                "S_TAG"
+                            ]
+                        }
+                    },
+                    {
+                        "LG Channels 약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_CHL"
+                            ]
+                        }
+                    },
+                    {
+                        "ACR약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_CHL",
+                                "S_ADG"
+                            ]
+                        }
+                    },
+                    {
+                        "ACR광고약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_CHL",
+                                "S_ADG",
+                                "S_TAG"
+                            ]
+                        }
+                    },
+                    {
+                        "W.W.W 약관": {
+                            "tp_code": []
+                        }
+                    },
+                    {
+                        "LG쇼핑 약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_CHL",
+                                "S_ADG"
+                            ]
+                        }
+                    },
+                    {
+                        "마케팅약관": {
+                            "tp_code": []
+                        }
+                    },
+                    {
+                        "데이터판매": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_CHL",
+                                "S_ADG",
+                                "S_DPA"
+                            ]
+                        }
+                    },
+                    {
+                        "전체동의": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_CHL",
+                                "S_ADG",
+                                "S_VNG",
+                                "S_TAG",
+                                "S_DPA"
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "data": {
+            "Country": {
+                "value": "Global 국가(신규 추가 국가 포함) + Others국가\n\n*제외국가: \n한국 / GDPR 32개국 / \nGlobal 12개국(USA, 중국, 뉴질랜드, 태국, Brazil,\n캐나다, 멕시코, 호주, 칠레, 아르헨티나, 콜롬비아, 페루, 인도)",
+                "terms_lst": [
+                    {
+                        "최초동의": {
+                            "tp_code": [
+                                "S_DSC"
+                            ]
+                        }
+                    },
+                    {
+                        "기본약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRG"
+                            ]
+                        }
+                    },
+                    {
+                        "시청정보 약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRG",
+                                "S_ADG"
+                            ]
+                        }
+                    },
+                    {
+                        "음성약관1": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRG",
+                                "S_VNG"
+                            ]
+                        }
+                    },
+                    {
+                        "음성약관2": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRG",
+                                "S_ADG",
+                                "S_VNG"
+                            ]
+                        }
+                    },
+                    {
+                        "맞춤형광고약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRG",
+                                "S_TAG"
+                            ]
+                        }
+                    },
+                    {
+                        "ACR약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRG",
+                                "S_ADG"
+                            ]
+                        }
+                    },
+                    {
+                        "ACR광고약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRG",
+                                "S_ADG",
+                                "S_TAG"
+                            ]
+                        }
+                    },
+                    {
+                        "LG쇼핑 약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRG",
+                                "S_ADG"
+                            ]
+                        }
+                    },
+                    {
+                        "전체동의": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRG",
+                                "S_ADG",
+                                "S_VNG",
+                                "S_TAG"
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "data": {
+            "Country": {
+                "value": "Global 1개국\n중국",
+                "terms_lst": [
+                    {
+                        "최초동의": {
+                            "tp_code": [
+                                "S_DSC"
+                            ]
+                        }
+                    },
+                    {
+                        "기본약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRG"
+                            ]
+                        }
+                    },
+                    {
+                        "시청정보 약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRG",
+                                "S_ADG"
+                            ]
+                        }
+                    },
+                    {
+                        "음성약관1": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRG",
+                                "S_VNG",
+                                "S_VOT"
+                            ]
+                        }
+                    },
+                    {
+                        "음성약관2": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRG",
+                                "S_DBI"
+                            ]
+                        }
+                    },
+                    {
+                        "맞춤형광고약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRG",
+                                "S_TAG"
+                            ]
+                        }
+                    },
+                    {
+                        "ACR약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRG",
+                                "S_ADG"
+                            ]
+                        }
+                    },
+                    {
+                        "ACR광고약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRG",
+                                "S_ADG",
+                                "S_TAG"
+                            ]
+                        }
+                    },
+                    {
+                        "LG쇼핑 약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRG",
+                                "S_ADG"
+                            ]
+                        }
+                    },
+                    {
+                        "전체동의": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRG",
+                                "S_ADG",
+                                "S_VNG",
+                                "S_VOT",
+                                "S_TAG",
+                                "S_DBI"
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "data": {
+            "Country": {
+                "value": "Global 1개국\n뉴질랜드\n(Overseas Transfer 적용)",
+                "terms_lst": [
+                    {
+                        "최초동의": {
+                            "tp_code": [
+                                "S_DSC"
+                            ]
+                        }
+                    },
+                    {
+                        "기본약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRG",
+                                "S_DTO"
+                            ]
+                        }
+                    },
+                    {
+                        "시청정보약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRG",
+                                "S_DTO",
+                                "S_ADG"
+                            ]
+                        }
+                    },
+                    {
+                        "음성약관1": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRG",
+                                "S_DTO",
+                                "S_VNG"
+                            ]
+                        }
+                    },
+                    {
+                        "음성약관2": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRG",
+                                "S_DTO",
+                                "S_ADG",
+                                "S_VNG"
+                            ]
+                        }
+                    },
+                    {
+                        "맞춤형광고약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRG",
+                                "S_DTO",
+                                "S_TAG"
+                            ]
+                        }
+                    },
+                    {
+                        "ACR약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRG",
+                                "S_DTO",
+                                "S_ADG"
+                            ]
+                        }
+                    },
+                    {
+                        "ACR광고약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRG",
+                                "S_DTO",
+                                "S_ADG",
+                                "S_TAG"
+                            ]
+                        }
+                    },
+                    {
+                        "LG쇼핑 약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRG",
+                                "S_DTO",
+                                "S_ADG"
+                            ]
+                        }
+                    },
+                    {
+                        "전체동의": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRG",
+                                "S_DTO",
+                                "S_ADG",
+                                "S_VNG",
+                                "S_TAG"
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "data": {
+            "Country": {
+                "value": "Global 1개국\n(LG Channels,Verance 있는 국가/모델)\nUSA",
+                "terms_lst": [
+                    {
+                        "최초동의": {
+                            "tp_code": [
+                                "S_DSC"
+                            ]
+                        }
+                    },
+                    {
+                        "기본약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRG"
+                            ]
+                        }
+                    },
+                    {
+                        "시청정보 약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRG",
+                                "S_ADG"
+                            ]
+                        }
+                    },
+                    {
+                        "음성약관1": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRG",
+                                "S_VNG"
+                            ]
+                        }
+                    },
+                    {
+                        "음성약관2": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRG",
+                                "S_ADG",
+                                "S_VNG"
+                            ]
+                        }
+                    },
+                    {
+                        "맞춤형광고약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRG",
+                                "S_TAG"
+                            ]
+                        }
+                    },
+                    {
+                        "ACR약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRG",
+                                "S_ADG"
+                            ]
+                        }
+                    },
+                    {
+                        "ACR광고약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRG",
+                                "S_ADG",
+                                "S_TAG"
+                            ]
+                        }
+                    },
+                    {
+                        "LG채널약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRG"
+                            ]
+                        }
+                    },
+                    {
+                        "W.W.W 약관": {
+                            "tp_code": []
+                        }
+                    },
+                    {
+                        "LG쇼핑 약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRG",
+                                "S_ADG"
+                            ]
+                        }
+                    },
+                    {
+                        "마케팅약관": {
+                            "tp_code": []
+                        }
+                    },
+                    {
+                        "전체동의": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRG",
+                                "S_ADG",
+                                "S_VNG",
+                                "S_TAG"
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "data": {
+            "Country": {
+                "value": "Global 8개국\n(LG Channels 있는 국가/모델)\n캐나다, 멕시코, 호주, 칠레, 아르헨티나, 콜롬비아, 페루, 인도",
+                "terms_lst": [
+                    {
+                        "최초동의": {
+                            "tp_code": [
+                                "S_DSC"
+                            ]
+                        }
+                    },
+                    {
+                        "기본약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRG"
+                            ]
+                        }
+                    },
+                    {
+                        "시청정보 약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRG",
+                                "S_ADG"
+                            ]
+                        }
+                    },
+                    {
+                        "음성약관1": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRG",
+                                "S_VNG"
+                            ]
+                        }
+                    },
+                    {
+                        "음성약관2": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRG",
+                                "S_ADG",
+                                "S_VNG"
+                            ]
+                        }
+                    },
+                    {
+                        "맞춤형광고약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRG",
+                                "S_TAG"
+                            ]
+                        }
+                    },
+                    {
+                        "ACR약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRG",
+                                "S_ADG"
+                            ]
+                        }
+                    },
+                    {
+                        "ACR광고약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRG",
+                                "S_ADG",
+                                "S_TAG"
+                            ]
+                        }
+                    },
+                    {
+                        "LG채널약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRG",
+                                "S_CHP"
+                            ]
+                        }
+                    },
+                    {
+                        "LG쇼핑 약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRG",
+                                "S_ADG"
+                            ]
+                        }
+                    },
+                    {
+                        "전체동의": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRG",
+                                "S_ADG",
+                                "S_VNG",
+                                "S_TAG",
+                                "S_CHP"
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "data": {
+            "Country": {
+                "value": "GDPR Type 2개국\n태국 / Kosovo",
+                "terms_lst": [
+                    {
+                        "최초동의": {
+                            "tp_code": [
+                                "S_DSC"
+                            ]
+                        }
+                    },
+                    {
+                        "기본약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_DTO",
+                                "S_PRP"
+                            ]
+                        }
+                    },
+                    {
+                        "시청정보 약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_DTO",
+                                "S_PRP",
+                                "S_ADG"
+                            ]
+                        }
+                    },
+                    {
+                        "음성약관1": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_DTO",
+                                "S_PRP",
+                                "S_VNG"
+                            ]
+                        }
+                    },
+                    {
+                        "음성약관2": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_DTO",
+                                "S_PRP",
+                                "S_ADG",
+                                "S_VNG"
+                            ]
+                        }
+                    },
+                    {
+                        "맞춤형광고약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_DTO",
+                                "S_PRP",
+                                "S_TAG"
+                            ]
+                        }
+                    },
+                    {
+                        "ACR약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_DTO",
+                                "S_PRP",
+                                "S_ADG"
+                            ]
+                        }
+                    },
+                    {
+                        "ACR광고약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_DTO",
+                                "S_PRP",
+                                "S_ADG",
+                                "S_TAG"
+                            ]
+                        }
+                    },
+                    {
+                        "LG쇼핑 약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_DTO",
+                                "S_PRP",
+                                "S_ADG"
+                            ]
+                        }
+                    },
+                    {
+                        "전체동의": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_DTO",
+                                "S_PRP",
+                                "S_ADG",
+                                "S_VNG",
+                                "S_TAG"
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "data": {
+            "Country": {
+                "value": "GDPR Type 1개국\n(LG Channels 있는 국가)\n브라질\n \n",
+                "terms_lst": [
+                    {
+                        "최초동의": {
+                            "tp_code": [
+                                "S_DSC"
+                            ]
+                        }
+                    },
+                    {
+                        "기본약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_CHL"
+                            ]
+                        }
+                    },
+                    {
+                        "시청정보 약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_CHL",
+                                "S_ADG"
+                            ]
+                        }
+                    },
+                    {
+                        "음성약관1": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_CHL",
+                                "S_VNG"
+                            ]
+                        }
+                    },
+                    {
+                        "음성약관2": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_CHL",
+                                "S_ADG",
+                                "S_VNG"
+                            ]
+                        }
+                    },
+                    {
+                        "맞춤형광고약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_CHL",
+                                "S_TAG"
+                            ]
+                        }
+                    },
+                    {
+                        "LG Channels 약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_CHL"
+                            ]
+                        }
+                    },
+                    {
+                        "ACR약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_CHL",
+                                "S_ADG"
+                            ]
+                        }
+                    },
+                    {
+                        "ACR광고약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_CHL",
+                                "S_ADG",
+                                "S_TAG"
+                            ]
+                        }
+                    },
+                    {
+                        "LG쇼핑 약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_CHL",
+                                "S_ADG"
+                            ]
+                        }
+                    },
+                    {
+                        "전체동의": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRP",
+                                "S_CHL",
+                                "S_ADG",
+                                "S_VNG",
+                                "S_TAG"
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "data": {
+            "Country": {
+                "value": "한국",
+                "terms_lst": [
+                    {
+                        "최초동의": {
+                            "tp_code": [
+                                "S_DSC"
+                            ]
+                        }
+                    },
+                    {
+                        "기본약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRV",
+                                "S_PRY"
+                            ]
+                        }
+                    },
+                    {
+                        "시청정보약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRV",
+                                "S_PRY"
+                            ]
+                        }
+                    },
+                    {
+                        "음성약관1": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRV",
+                                "S_PRY",
+                                "S_VDC",
+                                "S_VDD"
+                            ]
+                        }
+                    },
+                    {
+                        "음성약관2": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRV",
+                                "S_PRY",
+                                "S_VDC",
+                                "S_VDD"
+                            ]
+                        }
+                    },
+                    {
+                        "맞춤형광고약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRV",
+                                "S_PRY",
+                                "S_PRC",
+                                "S_PRD"
+                            ]
+                        }
+                    },
+                    {
+                        "LG채널약관": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRV",
+                                "S_PRY"
+                            ]
+                        }
+                    },
+                    {
+                        "전체동의": {
+                            "tp_code": [
+                                "S_ALL",
+                                "S_SVC",
+                                "S_PRV",
+                                "S_PRY",
+                                "S_PRC",
+                                "S_PRD",
+                                "S_VDC",
+                                "S_VDD"
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    }
+]

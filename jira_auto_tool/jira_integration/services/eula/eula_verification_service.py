@@ -98,7 +98,7 @@ class EulaVerificationService :
             
             if responseBody.get('statusCode') == 404 : 
                 return {country_key : False}
-            
+
             is_verified = self.eula_service.compare_term_data_sync_status(
                 terms_lst,
                 responseBody
